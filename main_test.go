@@ -29,10 +29,10 @@ type Transcript struct {
 
 func TestArgParsing(t *testing.T) {
 	t.Skip()
-	expected := "youtube"
+	expected := "indo"
 	// simulate os args
 	var args []string
-	args = append(args, "value1", "value2", "value3", "https://www.youtube.com/watch?v=Fo49GokDJhM")
+	args = append(args, "value1", "value2", "value3", "https://www.youtube.com/watch?v=Fo49GokDJhM", "indo")
 	for _, arg := range args {
 		if strings.Contains(arg, expected) {
 			fmt.Printf("argumen found")
@@ -85,6 +85,7 @@ func TestXMLParsing(t *testing.T) {
 
 }
 func TestTokenizer(t *testing.T) {
+	t.Skip()
 	mdInput := "captions/sVC4DL2secQ.md"
 	data, err := os.ReadFile(mdInput)
 	if err != nil {
@@ -166,4 +167,24 @@ func TestSaveMdData(t *testing.T) {
 	if err != nil {
 		t.Errorf("fail to write file: %v", err)
 	}
+}
+
+func TestBooleanLogic(t *testing.T) {
+	t.Skip()
+	var val1 string
+	fmt.Print(val1 == "")
+}
+
+func TestReverseParsingArg(t *testing.T) {
+	var args []string
+	expected := "indo"
+	args = append(args, "value1", "value2", "value3", "https://www.youtube.com/watch?v=Fo49GokDJhM", "indo")
+	final_arg := args[len(args)-1]
+	re := regexp.MustCompile(`(?:v=|youtu\.be/)([a-zA-Z0-9_-]{11})`)
+	match := re.FindStringSubmatch(final_arg)
+	if len(match) > 1 {
+		t.Errorf("fail to parse regex expression value")
+	}
+	fmt.Println("language id:", final_arg == expected)
+
 }

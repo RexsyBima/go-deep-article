@@ -7,6 +7,7 @@ import (
 	"github.com/alecthomas/kong"
 	deepseek "github.com/cohesion-org/deepseek-go"
 	"github.com/joho/godotenv"
+	"strings"
 	// token "github.com/pandodao/tokenizer-go"
 	"html"
 	"log"
@@ -71,17 +72,61 @@ var CLI struct {
 func main() {
 	args := os.Args
 	ctx := kong.Parse(&CLI)
+	language := os.Args[len(os.Args)-1]
+	toPanic := 0
+	for i := 0; i < len(os.Args)-1; i++ {
+		if strings.Contains(os.Args[i], "youtube") {
+			toPanic += 1
+		}
+		if toPanic > 1 {
+			panic("Program crash, this program only allowed one yt url at a time")
+		}
+
+	}
 
 	err := ctx.Run()
 	ctx.FatalIfErrorf(err)
-	yt_url, err := getYoutubeURLFromArg(args)
+	yt_url, err := getParseGetArg(args, "youtube")
 	if err != nil {
 		panic("Program crash")
 	}
-	yt_id, err := extractYTIDFromURL(yt_url)
+	var systemprompt string
+	_, isLang, err := extractYTIDFromURL(language)
+	fmt.Print(isLang)
+	switch isLang {
+	case true:
+		systemprompt = fmt.Sprintf(`You are an AI transformation agent tasked with converting raw YouTube caption texts about knowledge into a polished, engaging, and readable blog post. Your responsibilities include:
+Your final output should be **only** the paraphrased text, styled in Markdown format, and in **%v** language.
+- **Paraphrasing**: Transform the original caption text into fresh, original content while preserving the key information and insights.
+- **Structure**: Organize the content into a well-defined structure featuring a captivating introduction, clearly delineated subheadings in the body, and a strong conclusion.
+- **Engagement**: Ensure the blog post is outstanding by using a professional yet conversational tone, creating smooth transitions, and emphasizing clarity and readability.
+- **Retention of Key Elements**: Maintain all essential elements and core ideas from the original text, while enhancing the narrative to captivate the reader.
+- **Adaptation**: Simplify technical details if necessary, ensuring that the transformed content is accessible to a broad audience without losing depth or accuracy.
+- **Quality**: Aim for a high-quality article that is both informative and engaging, ready for publication.
+
+Follow these guidelines to generate a comprehensive, coherent, and outstanding blog post from the provided YouTube captions text.
+
+`, language)
+	default:
+		systemprompt = `You are an AI transformation agent tasked with converting raw YouTube caption texts about knowledge into a polished, engaging, and readable blog post. Your responsibilities include:
+
+	your final output should be only the paraphrased text and style it to markdown like format in english language
+- Paraphrasing: Transform the original caption text into fresh, original content while preserving the key information and insights.
+Structure: Organize the content into a well-defined structure featuring a captivating introduction, clearly delineated subheadings in the body, and a strong conclusion.
+- Engagement: Ensure the blog post is outstanding by using a professional yet conversational tone, creating smooth transitions, and emphasizing clarity and readability.
+- Retention of Key Elements: Maintain all essential elements and core ideas from the original text, while enhancing the narrative to captivate the reader.
+- Adaptation: Simplify technical details if necessary, ensuring that the transformed content is accessible to a broad audience without losing depth or accuracy.
+- Quality: Aim for a high-quality article that is both informative and engaging, ready for publication.
+
+Follow these guidelines to generate a comprehensive, coherent, and outstanding blog post from the provided YouTube captions text.
+
+	`
+	}
+	yt_id, _, err := extractYTIDFromURL(yt_url)
 	if err != nil {
 		panic("Program crash")
 	}
+
 	filename := filepath.Join(baseDirDownload, fmt.Sprintf("captions_%s.xml", yt_id))
 	file, err := os.Open(filename)
 	defer file.Close()
@@ -105,19 +150,6 @@ func main() {
 
 	client := deepseek.NewClient(os.Getenv("DEEPSEEK_API_KEY"))
 	// Create a chat completion request
-	systemprompt := `You are an AI transformation agent tasked with converting raw YouTube caption texts about knowledge into a polished, engaging, and readable blog post. Your responsibilities include:
-
-- Paraphrasing: Transform the original caption text into fresh, original content while preserving the key information and insights.
-Structure: Organize the content into a well-defined structure featuring a captivating introduction, clearly delineated subheadings in the body, and a strong conclusion.
-- Engagement: Ensure the blog post is outstanding by using a professional yet conversational tone, creating smooth transitions, and emphasizing clarity and readability.
-- Retention of Key Elements: Maintain all essential elements and core ideas from the original text, while enhancing the narrative to captivate the reader.
-- Adaptation: Simplify technical details if necessary, ensuring that the transformed content is accessible to a broad audience without losing depth or accuracy.
-- Quality: Aim for a high-quality article that is both informative and engaging, ready for publication.
-
-Follow these guidelines to generate a comprehensive, coherent, and outstanding blog post from the provided YouTube captions text.
-
-	your final output should be only the paraphrased text and style it to markdown like format
-	`
 	request := &deepseek.ChatCompletionRequest{
 		Model: deepseek.DeepSeekChat,
 		Messages: []deepseek.ChatCompletionMessage{
@@ -149,4 +181,5 @@ Follow these guidelines to generate a comprehensive, coherent, and outstanding b
 		panic(err)
 	}
 	fmt.Printf("finished, the output md file is saved in captions/%v.md\n", yt_id)
+
 }

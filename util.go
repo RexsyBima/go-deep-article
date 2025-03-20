@@ -18,8 +18,7 @@ func createFolderIfNotExists(path string) error {
 	return nil
 }
 
-func getYoutubeURLFromArg(args []string) (string, error) {
-	expected := "youtube"
+func getParseGetArg(args []string, expected string) (string, error) {
 	for _, arg := range args {
 		if strings.Contains(arg, expected) {
 			return arg, nil
@@ -28,12 +27,12 @@ func getYoutubeURLFromArg(args []string) (string, error) {
 	return "", fmt.Errorf("Argument youtube not found, this should not be happening tho")
 }
 
-func extractYTIDFromURL(url string) (string, error) {
+func extractYTIDFromURL(url string) (string, bool, error) {
 	re := regexp.MustCompile(`(?:v=|youtu\.be/)([a-zA-Z0-9_-]{11})`)
 	match := re.FindStringSubmatch(url)
 	if len(match) > 1 {
-		return match[1], nil
+		return match[1], false, nil
 	} else {
-		return "", fmt.Errorf("fail to parse regex expression value")
+		return "", true, fmt.Errorf("fail to parse regex expression value")
 	}
 }
