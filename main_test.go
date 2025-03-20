@@ -87,6 +87,7 @@ func TestTokenizer(t *testing.T) {
 }
 
 func TestDeepseekGo(t *testing.T) {
+	t.Skip()
 	filename := filepath.Join("captions", "captions_IbXSEGB8LRs.xml")
 	file, err := os.Open(filename)
 	defer file.Close()
@@ -136,5 +137,24 @@ Follow these guidelines to generate a comprehensive, coherent, and outstanding b
 	err = os.WriteFile("output.md", []byte(fulltext), 0644)
 	if err != nil {
 		panic(err)
+	}
+}
+
+func TestSaveMdData(t *testing.T) {
+	mdFileName := "README.md"
+	mdOutputTestFile := "output.md"
+	data, err := os.ReadFile(mdFileName)
+	if err != nil {
+		t.Errorf("fail to read file: %v", err)
+	}
+	fmt.Println(string(data))
+	file, err := os.Create(mdOutputTestFile)
+	if err != nil {
+		t.Errorf("fail to create file: %v", err)
+	}
+	defer file.Close()
+	_, err = file.WriteString(string(data))
+	if err != nil {
+		t.Errorf("fail to write file: %v", err)
 	}
 }

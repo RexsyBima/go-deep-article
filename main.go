@@ -134,9 +134,19 @@ Follow these guidelines to generate a comprehensive, coherent, and outstanding b
 	// Print the response
 	output := response.Choices[0].Message.Content
 	fmt.Println("Response:", output)
-	err = os.WriteFile(fmt.Sprintf("%s/%s.md", baseDirDownload, yt_id), []byte(fulltext), 0644)
+	// err = os.WriteFile(fmt.Sprintf("%s/%s.md", baseDirDownload, yt_id), []byte(fulltext), 0644)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	filename = fmt.Sprintf("%s/%s.md", baseDirDownload, yt_id)
+	file, err = os.Create(filename)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("finished, the output md file is saved in captions/%v.md\n", yt_id)
+	defer file.Close()
+	_, err = file.WriteString(string(output))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("finished, the output md file is saved in captions/%v.md\n", yt_id)
 }

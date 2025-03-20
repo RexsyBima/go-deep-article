@@ -16,7 +16,6 @@ go run . download "youtubevideourlhere"
   OR
 
 download the binary file in the release here, then run `deeparticle download "youryoutubeurlhere"`
-after you generated the md file, please follow this instruction below to how post md file into medium https://medium.com/@andymcfee/how-to-import-markdown-into-medium-c06dc981bd96
 
 your paraphrased md file will be named by your youtube video id in folder `captions` in the same level of where you run the program from 
 ## Features
