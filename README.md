@@ -4,7 +4,7 @@ A program that converts YouTube video content into paraphrased articles. Perfect
 
 
 
-## Installation
+## Installation and uses
 first, make sure your env system has api key for deepseek, named `DEEPSEEK_API_KEY`
 Install go-deep-article by cloning my repo and run it with go
 
@@ -17,6 +17,8 @@ go run . download "youtubevideourlhere"
   OR
 
 download the binary file in the release here, then run `deeparticle download "youryoutubeurlhere"`
+
+your paraphrased md file will be named by your youtube video id in folder `captions` in the same level of where you run the program from 
 ## Features
 
 - Converts YouTube video transcripts into readable articles
