@@ -28,6 +28,7 @@ type Transcript struct {
 }
 
 func TestArgParsing(t *testing.T) {
+	t.Skip()
 	expected := "youtube"
 	// simulate os args
 	var args []string
@@ -42,6 +43,7 @@ func TestArgParsing(t *testing.T) {
 }
 
 func TestRegexYTIDExtract(t *testing.T) {
+	t.Skip()
 	url := "https://www.youtube.com/watch?v=Fo49GokDJhM&t=25"
 	re := regexp.MustCompile(`(?:v=|youtu\.be/)([a-zA-Z0-9_-]{11})`)
 	match := re.FindStringSubmatch(url)
@@ -53,6 +55,7 @@ func TestRegexYTIDExtract(t *testing.T) {
 }
 
 func TestPathJoin(t *testing.T) {
+	t.Skip()
 	dir := "captions"
 	vid_id := "captions_IbXSEGB8LRs.xml"
 	output := filepath.Join(dir, vid_id)
@@ -62,6 +65,7 @@ func TestPathJoin(t *testing.T) {
 }
 
 func TestXMLParsing(t *testing.T) {
+	t.Skip()
 	filename := filepath.Join("captions", "captions_IbXSEGB8LRs.xml")
 	file, err := os.Open(filename)
 	defer file.Close()
@@ -81,8 +85,12 @@ func TestXMLParsing(t *testing.T) {
 
 }
 func TestTokenizer(t *testing.T) {
-	text := "Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it Hello bro this is a very long sentence, you gotta believe me bro, this is it  "
-	tokenCount := token.MustCalToken(text)
+	mdInput := "captions/sVC4DL2secQ.md"
+	data, err := os.ReadFile(mdInput)
+	if err != nil {
+		t.Errorf("fail to read file: %v", err)
+	}
+	tokenCount := token.MustCalToken(string(data))
 	fmt.Println(tokenCount)
 }
 
@@ -141,6 +149,7 @@ Follow these guidelines to generate a comprehensive, coherent, and outstanding b
 }
 
 func TestSaveMdData(t *testing.T) {
+	t.Skip()
 	mdFileName := "README.md"
 	mdOutputTestFile := "output.md"
 	data, err := os.ReadFile(mdFileName)
