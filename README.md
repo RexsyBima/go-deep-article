@@ -1,7 +1,6 @@
 # Go Deep Article
 
-A program that converts YouTube video content into paraphrased articles. Perfect for content branding in texted media (medium, linkedin and others). Transforms spoken content into written format while maintaining core meaning.
-
+A program that converts YouTube video content into paraphrased articles, written in Go (heck yea). Perfect for content branding in texted media (medium, linkedin and others). Transforms spoken content into written format while maintaining core meaning.
 
 
 ## Installation and uses
