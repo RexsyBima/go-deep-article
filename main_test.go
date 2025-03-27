@@ -186,5 +186,19 @@ func TestReverseParsingArg(t *testing.T) {
 		t.Errorf("fail to parse regex expression value")
 	}
 	fmt.Println("language id:", final_arg == expected)
+}
 
+func TestDeleteFile(t *testing.T) {
+	t.Skip()
+	targetFile := "captions_A3IQj0LCocA.xml"
+	path := filepath.Join("captions", targetFile)
+	err := os.Remove(path)
+	if err != nil {
+		t.Errorf("fail to delete file: %v", err)
+	}
+}
+
+func TestPointer(t *testing.T) {
+	data := "foobar"
+	p * string := &data
 }

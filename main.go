@@ -96,7 +96,6 @@ func main() {
 	switch isLang {
 	case true:
 		systemprompt = fmt.Sprintf(`You are an AI transformation agent tasked with converting raw YouTube caption texts about knowledge into a polished, engaging, and readable blog post. Your responsibilities include:
-Your final output should be **only** the paraphrased text, styled in Markdown format, and in **%v** language.
 - **Paraphrasing**: Transform the original caption text into fresh, original content while preserving the key information and insights.
 - **Structure**: Organize the content into a well-defined structure featuring a captivating introduction, clearly delineated subheadings in the body, and a strong conclusion.
 - **Engagement**: Ensure the blog post is outstanding by using a professional yet conversational tone, creating smooth transitions, and emphasizing clarity and readability.
@@ -105,12 +104,12 @@ Your final output should be **only** the paraphrased text, styled in Markdown fo
 - **Quality**: Aim for a high-quality article that is both informative and engaging, ready for publication.
 
 Follow these guidelines to generate a comprehensive, coherent, and outstanding blog post from the provided YouTube captions text.
+Your final output should be **only** the paraphrased text, styled in Markdown format, and in **%v** language.
 
 `, language)
 	default:
 		systemprompt = `You are an AI transformation agent tasked with converting raw YouTube caption texts about knowledge into a polished, engaging, and readable blog post. Your responsibilities include:
 
-	your final output should be only the paraphrased text and style it to markdown like format in english language
 - Paraphrasing: Transform the original caption text into fresh, original content while preserving the key information and insights.
 Structure: Organize the content into a well-defined structure featuring a captivating introduction, clearly delineated subheadings in the body, and a strong conclusion.
 - Engagement: Ensure the blog post is outstanding by using a professional yet conversational tone, creating smooth transitions, and emphasizing clarity and readability.
@@ -119,7 +118,7 @@ Structure: Organize the content into a well-defined structure featuring a captiv
 - Quality: Aim for a high-quality article that is both informative and engaging, ready for publication.
 
 Follow these guidelines to generate a comprehensive, coherent, and outstanding blog post from the provided YouTube captions text.
-
+your final output should be only the paraphrased text and style it to markdown like format in english language
 	`
 	}
 	yt_id, _, err := extractYTIDFromURL(yt_url)
@@ -181,5 +180,10 @@ Follow these guidelines to generate a comprehensive, coherent, and outstanding b
 		panic(err)
 	}
 	fmt.Printf("finished, the output md file is saved in captions/%v.md\n", yt_id)
-
+	targetFile := fmt.Sprintf("captions_%s.xml", yt_id)
+	path := filepath.Join("captions", targetFile)
+	err = os.Remove(path)
+	if err != nil {
+		fmt.Printf("fail to delete redundant filefile", yt_id)
+	}
 }
